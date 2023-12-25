@@ -3,12 +3,9 @@
 #----------------------------------------------------------------------------------------------------- # 
 import glob
 import helper_functions as helpers
-import numpy as np 
 import os 
 import pandas as pd
-import prototype 
-import scipy 
-import sklearn 
+
 
 #----------------------------------------------------------------------------------------------------- # 
 # Data preparation
