@@ -1,65 +1,46 @@
 #----------------------------------------------------------------------------------------------------- # 
 # Modules
 #----------------------------------------------------------------------------------------------------- # 
+import glob
+import helper_functions as helpers
 import numpy as np 
-import pandas as pd 
+import os 
+import pandas as pd
+import prototype 
 import scipy 
 import sklearn 
-import helper_functions as helpers
-
-
-#----------------------------------------------------------------------------------------------------- # 
-# Data collection 
-#----------------------------------------------------------------------------------------------------- # 
-# 2022 Spring Regular Season 
-twenty_two_spring_regular = pd.read_csv('LCK_Player_Data/2022 Spring.csv')
-twenty_two_spring_regular.reset_index(drop=True, inplace=True)
-
-# 2022 Spring Playoffs
-twenty_two_spring_playoff = pd.read_csv('LCK_Player_Data/2022 Spring Playoffs.csv')
-twenty_two_spring_playoff.reset_index(drop=True, inplace=True)
-
-# 2022 Summer Regular Season 
-twenty_two_summer_regular = pd.read_csv('LCK_Player_Data/2022 Summer.csv')
-twenty_two_summer_regular.reset_index(drop=True, inplace=True)
-
-# 2022 Summer Playoffs
-twenty_two_summer_playoff = pd.read_csv('LCK_Player_Data/2022 Summer Playoffs.csv')
-twenty_two_summer_playoff.reset_index(drop=True, inplace=True)
-
-# 2023 Spring Regular Season 
-twenty_three_spring_regular = pd.read_csv('LCK_Player_Data/2023 Spring.csv')
-twenty_three_spring_regular.reset_index(drop=True, inplace=True)
-
-# 2023 Spring Playoffs
-twenty_three_spring_playoff = pd.read_csv('LCK_Player_Data/2023 Spring Playoffs.csv')
-twenty_three_spring_playoff.reset_index(drop=True, inplace=True)
-
-# 2023 Summer Regular Season 
-twenty_three_summer_regular = pd.read_csv('LCK_Player_Data/2023 Summer.csv')
-twenty_three_summer_regular.reset_index(drop=True, inplace=True)
-
-# 2023 Summer Playoffs
-twenty_three_summer_playoff = pd.read_csv('LCK_Player_Data/2023 Summer Playoffs.csv')
-twenty_three_summer_playoff.reset_index(drop=True, inplace=True)
-
 
 #----------------------------------------------------------------------------------------------------- # 
 # Data preparation
 #----------------------------------------------------------------------------------------------------- # 
-def prepare_data(df1: pd.DataFrame, df2: pd.DataFrame, df3: pd.DataFrame, df4: pd.DataFrame, 
-                 df5: pd.DataFrame, df6: pd.DataFrame, df7: pd.DataFrame, df8: pd.DataFrame) -> pd.DataFrame:
+def prepare_data(pathname: str, *additional_pathname: str) -> pd.DataFrame:
     '''
         
         Parameters: 
-            df1-df8 (pd.DataFrame): Statistics from Spring Regular Season 2022 - Summer Playoffs 2023 
+            pathname (str): Folder containing statistics for different regions/events
+
+        Optional Parameters: 
+            additional_pathname (str): Additional folders containing statistics for different regions/events
         
         Returns: 
             final_data (pd.DataFrame): Cleaned and averaged statistics
     
     '''
-    # Combine all data sources 
-    joined_data = pd.concat([df1, df2, df3, df4, df5, df6, df7, df8])
+    # List to hold all DataFrames
+    dataframes = []
+
+    # Iterate over the initial pathname and any additional pathnames
+    for directory in [pathname, *additional_pathname]:
+        
+        # Construct the full file path for each file in the directory
+        for file_path in glob.glob(os.path.join(directory, '*.csv')): 
+            
+            # Read the file and append to the list of DataFrames
+            df = pd.read_csv(file_path)
+            dataframes.append(df)
+
+    # Concatenate all data together
+    joined_data = pd.concat(dataframes, ignore_index=True)
 
     # Clean initial data 
     cleaned_data = helpers.cleanup_data(joined_data)
@@ -76,18 +57,18 @@ def prepare_data(df1: pd.DataFrame, df2: pd.DataFrame, df3: pd.DataFrame, df4: p
     return final_data
 
 
-#----------------------------------------------------------------------------------------------------- # 
-# Elo calculation
-#----------------------------------------------------------------------------------------------------- # 
-# Elo rating formula (equal weightings for now)
-def calc_player_elo(param_dct: dict) -> int: 
-    '''
+# #----------------------------------------------------------------------------------------------------- # 
+# # Elo calculation
+# #----------------------------------------------------------------------------------------------------- # 
+# # Elo rating formula (equal weightings for now)
+# def calc_player_elo(param_dct: dict) -> int: 
+#     '''
     
-        Parameters: 
-            param_dct (dict): Statistics of given player 
+#         Parameters: 
+#             param_dct (dict): Statistics of given player 
         
-        Returns: 
-            elo (int): Calculated elo of given player
+#         Returns: 
+#             elo (int): Calculated elo of given player
 
-    '''
-    return elo
+#     '''
+#     return elo
