@@ -13,7 +13,6 @@ from tqdm import tqdm
 #----------------------------------------------------------------------------------------------------- # 
 # Load data 
 final_data = data_preparation.prepare_data("LCK_Player_Data",
-                                           # "LCKCL_Player_Data", 
                                            "LCS_Player_Data",
                                            "LEC_Player_Data",
                                            "MSI_Player_Data",

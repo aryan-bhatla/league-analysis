@@ -245,6 +245,14 @@ final_data.drop(final_data.tail(1).index, inplace = True)
 model_results = pd.read_csv('results.csv', index_col = 0)
 
 
+#----------------------------------------------------------------------------------------------------- #
+# Elo normalisation factor
+#----------------------------------------------------------------------------------------------------- # 
+LCS_normalisation = 1.25
+LEC_normalisation = 1.15
+LCK_normalisation = 1.0
+
+
 #----------------------------------------------------------------------------------------------------- # 
 # LCK total team elo
 #----------------------------------------------------------------------------------------------------- # 
@@ -281,7 +289,7 @@ for team_name, team_data in LCS_teams.items():
         ratings = rating.calc_player_rating(player, model_results, final_data, "importance")
         player_ratings.append(ratings)
 
-    total_team_rating = sum(player_ratings)
+    total_team_rating = sum(player_ratings) / LCS_normalisation
     team_ratings.append(total_team_rating)
 
     print(f"{team_name} has a rating of {total_team_rating}")
@@ -302,7 +310,7 @@ for team_name, team_data in LEC_teams.items():
         ratings = rating.calc_player_rating(player, model_results, final_data, "importance")
         player_ratings.append(ratings)
 
-    total_team_rating = sum(player_ratings)
+    total_team_rating = sum(player_ratings) / LEC_normalisation
     team_ratings.append(total_team_rating)
 
     print(f"{team_name} has a rating of {total_team_rating}")
