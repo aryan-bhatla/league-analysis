@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Team Stats for Different Regions</title>
+</head>
+<body>
+    <h1>LCK:</h1>
+    <ul>
+        {% for team, rating in lck_data %}
+            <li>{{ team }} has a rating of {{ rating }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>LCS:</h1>
+    <ul>
+        {% for team, rating in lcs_data %}
+            <li>{{ team }} has a rating of {{ rating }}</li>
+        {% endfor %}
+    </ul>
+
+    <h1>LEC:</h1>
+    <ul>
+        {% for team, rating in lec_data %}
+            <li>{{ team }} has a rating of {{ rating }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

@@ -5,15 +5,9 @@ import pandas as pd
 
 
 #----------------------------------------------------------------------------------------------------- #
-# Load results 
+# Player Rating function 
 #----------------------------------------------------------------------------------------------------- # 
-model_results = pd.read_csv('results.csv', index_col = 0)
-
-
-#----------------------------------------------------------------------------------------------------- #
-# Rating function 
-#----------------------------------------------------------------------------------------------------- # 
-def calc_player_rating(player: str, model_results: pd.DataFrame, final_data: pd.DataFrame, method = "coefficient") -> int: 
+def calc_player_rating(player: str, model_results: pd.DataFrame, final_data: pd.DataFrame, method: str = "coefficient") -> int: 
     '''
         
         Parameters: 

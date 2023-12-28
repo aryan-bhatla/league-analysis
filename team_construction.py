@@ -253,64 +253,46 @@ LEC_normalisation = 1.15
 LCK_normalisation = 1.0
 
 
-#----------------------------------------------------------------------------------------------------- # 
-# LCK total team elo
-#----------------------------------------------------------------------------------------------------- # 
-team_ratings = []
-
-# Iterate through each team in the LCK
-for team_name, team_data in LCK_teams.items():
-   
-    # Reset player_ratings for each team
-    player_ratings = []  
-
-    for position, player in team_data.items():
-        ratings = rating.calc_player_rating(player, model_results, final_data, "importance")
-        player_ratings.append(ratings)
-
-    total_team_rating = sum(player_ratings)
-    team_ratings.append(total_team_rating)
-
-    print(f"{team_name} has a rating of {total_team_rating}")
-
-
-#----------------------------------------------------------------------------------------------------- # 
-# LCS total team elo
 #----------------------------------------------------------------------------------------------------- #
-team_ratings = []
-
-# Iterate through each team in the LCS
-for team_name, team_data in LCS_teams.items():
-   
-    # Reset player_ratings for each team
-    player_ratings = []  
-
-    for position, player in team_data.items():
-        ratings = rating.calc_player_rating(player, model_results, final_data, "importance")
-        player_ratings.append(ratings)
-
-    total_team_rating = sum(player_ratings) / LCS_normalisation
-    team_ratings.append(total_team_rating)
-
-    print(f"{team_name} has a rating of {total_team_rating}")
-
-
+# Team Rating function 
 #----------------------------------------------------------------------------------------------------- # 
-# LEC total team elo
+def calculate_team_ratings(teams: dict, normalization_factor: float = None) -> list:
+    '''
+
+    Parameters:
+        teams (dict): Dictionary containing teams' data.
+        normalization_factor (float): Factor to normalize team ratings, defaults to None, alternatively a float can be used
+
+    Returns:
+        team_ratings (list): List of total team ratings
+
+    '''
+    team_ratings = []
+
+    for team_name, team_data in teams.items():
+        player_ratings = []
+
+        for player in team_data.values():
+
+            # Calculate player rating using a specific method ("importance" or "coefficient")
+            ratings = rating.calc_player_rating(player, model_results, final_data, "importance")
+            player_ratings.append(ratings)
+
+        total_team_rating = sum(player_ratings)
+
+        # Normalize total team rating if a normalization factor is provided
+        if normalization_factor:
+            total_team_rating /= normalization_factor
+
+        team_ratings.append(total_team_rating)
+        print(f"{team_name} has a rating of {total_team_rating}")
+
+    return team_ratings
+
+
 #----------------------------------------------------------------------------------------------------- #
-team_ratings = []
-
-# Iterate through each team in the LEC
-for team_name, team_data in LEC_teams.items():
-   
-    # Reset player_ratings for each team
-    player_ratings = []  
-
-    for position, player in team_data.items():
-        ratings = rating.calc_player_rating(player, model_results, final_data, "importance")
-        player_ratings.append(ratings)
-
-    total_team_rating = sum(player_ratings) / LEC_normalisation
-    team_ratings.append(total_team_rating)
-
-    print(f"{team_name} has a rating of {total_team_rating}")
+# LCK, LCS, LEC ratings
+#----------------------------------------------------------------------------------------------------- # 
+lck_team_ratings = calculate_team_ratings(LCK_teams)
+lcs_team_ratings = calculate_team_ratings(LCS_teams, LCS_normalisation)
+lec_team_ratings = calculate_team_ratings(LEC_teams, LEC_normalisation)
