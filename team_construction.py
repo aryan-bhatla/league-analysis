@@ -285,7 +285,6 @@ def calculate_team_ratings(teams: dict, normalization_factor: float = None) -> l
             total_team_rating /= normalization_factor
 
         team_ratings.append(total_team_rating)
-        print(f"{team_name} has a rating of {total_team_rating}")
 
     return team_ratings
 
