@@ -2,6 +2,7 @@
 # Modules
 #----------------------------------------------------------------------------------------------------- # 
 import data_preparation
+import logistic_function as logistic
 import pandas as pd
 import rating_calculation as rating 
 
@@ -221,6 +222,42 @@ LEC_teams = {'Fnatic': Fnatic,
 
 
 #----------------------------------------------------------------------------------------------------- # 
+# All teams 
+#----------------------------------------------------------------------------------------------------- # 
+# Copying the LCK, LCS, and LEC teams
+all_teams = {
+    'LCK': {'Dplus_KIA': Dplus_KIA,
+            'DRX': DRX,
+            'Gen_G': Gen_G,
+            'Hanwha_Life_Esports': Hanwha_Life_Esports,
+            'KT_Rolster': KT_Rolster,
+            'Kwangdong_Freecs': Kwangdong_Freecs,
+            'Nongshim_RedForce': Nongshim_RedForce,
+            'BRION': BRION,
+            'T1': T1,
+            'Liiv_SANDBOX': Liiv_SANDBOX},
+
+    'LCS': {'100_Thieves': _100_Thieves,
+            'Cloud9': Cloud9,
+            'Dignitas': Dignitas,
+            'FlyQuest': FlyQuest,
+            'Immortals': Immortals,
+            'NRG': NRG,
+            'Shopify_Rebellion': Shopify_Rebellion,
+            'Team_Liquid': Team_Liquid},
+
+    'LEC': {'Fnatic': Fnatic,
+            'G2_Esports': G2_Esports,
+            'GIANTX': GIANTX,
+            'Rogue': Rogue,
+            'SK_Gaming': SK_Gaming,
+            'Team_BDS': Team_BDS,
+            'Team_Heretics': Team_Heretics,
+            'Team_Vitality': Team_Vitality}
+}
+
+
+#----------------------------------------------------------------------------------------------------- # 
 # Data preprocessing
 #----------------------------------------------------------------------------------------------------- # 
 # Load data 
@@ -295,3 +332,15 @@ def calculate_team_ratings(teams: dict, normalization_factor: float = None) -> l
 lck_team_ratings = calculate_team_ratings(LCK_teams)
 lcs_team_ratings = calculate_team_ratings(LCS_teams, LCS_normalisation)
 lec_team_ratings = calculate_team_ratings(LEC_teams, LEC_normalisation)
+
+lck_data = zip(LCK_teams, lck_team_ratings)
+lcs_data = zip(LCS_teams, lcs_team_ratings)
+lec_data = zip(LEC_teams, lec_team_ratings)
+
+
+# Example usage:
+team1 = "KT_Rolster"
+team2 = "T1"
+result = logistic.rating_to_winrate(team1, team2, lck_data)
+print(f"Winrate for {team1}: {result[0]*100:.2f}%")
+print(f"Winrate for {team2}: {result[1]*100:.2f}%")
