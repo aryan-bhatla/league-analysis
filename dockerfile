@@ -1,14 +1,17 @@
-# Official Docker 3.9.7 base image
+# Use official Docker Python 3.9.7 image as base image
 FROM python:3.9.7
 
-# Move to /app directory inside container 
+# Move to /app directory in container 
 WORKDIR /app
 
-# Collect and install packages 
+# Copy requirements file in local directory to /app directory in container 
 ADD ./requirements.txt /app/requirements.txt
 
-# Add everything in current directory to /app directory in container 
+# Pip install required packages in container
+RUN pip install -r requirements.txt 
+
+# Copy everything in local directory to /app directory in container 
 ADD . /app
 
-# Run the application from the container
+# Run the application in container
 CMD [ "python", "main.py" ]
