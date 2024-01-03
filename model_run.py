@@ -35,7 +35,7 @@ Top_data = grouped_data.get_group('Top')
 # Results setup
 #----------------------------------------------------------------------------------------------------- # 
 # Number of iterations
-num_iterations = 3
+num_iterations = 10
 
 # Initialize a dictionary to store results for each iteration
 all_results = {i: pd.DataFrame() for i in range(num_iterations)}
@@ -92,6 +92,6 @@ for role in roles:
 final_results = pd.concat([results, average_coefficients, average_importances], axis=1)
 
 # Save to CSV
-final_results.to_csv('results.csv')
+final_results.to_csv('model_results.csv')
 
 

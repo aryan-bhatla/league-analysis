@@ -279,7 +279,7 @@ final_data.drop(final_data.tail(1).index, inplace = True)
 #----------------------------------------------------------------------------------------------------- #
 # Load results 
 #----------------------------------------------------------------------------------------------------- # 
-model_results = pd.read_csv('results.csv', index_col = 0)
+model_results = pd.read_csv('model_results.csv', index_col = 0)
 
 
 #----------------------------------------------------------------------------------------------------- #
@@ -339,7 +339,7 @@ lec_data = zip(LEC_teams, lec_team_ratings)
 
 
 # Example usage:
-team1 = "KT_Rolster"
+team1 = "Gen_G"
 team2 = "T1"
 result = logistic.rating_to_winrate(team1, team2, lck_data)
 print(f"Winrate for {team1}: {result[0]*100:.2f}%")
