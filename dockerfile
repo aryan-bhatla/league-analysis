@@ -7,11 +7,28 @@ WORKDIR /app
 # Copy requirements file in local directory to /app directory in container 
 ADD ./requirements.txt /app/requirements.txt
 
+# Install requirements for packages in container
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    gfortran \
+    libblas-dev \ 
+    libc-dev \
+    libffi-dev \
+    liblapack-dev \ 
+    libssl-dev \
+    python3-dev 
+
+# Upgrade pip in container 
+RUN pip install --upgrade pip
+
 # Pip install required packages in container
-RUN pip install -r requirements.txt 
+RUN pip3 install --user -r requirements.txt 
+
+# Set the PATH in container to include the '/root/.local/bin' directory where f2py and Flask are installed 
+ENV PATH="/root/.local/bin:${PATH}"
 
 # Copy everything in local directory to /app directory in container 
 ADD . /app
 
 # Run the application in container
-CMD [ "python", "main.py" ]
+CMD [ "python", "app.py" ]
