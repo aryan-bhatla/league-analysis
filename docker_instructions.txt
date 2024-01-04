@@ -1,0 +1,5 @@
+1. docker build -t league-analysis-image .
+
+2. docker tag league-analysis-image aryanbhatla/league-analysis-image
+
+3. docker push aryanbhatla/league-analysis-image
