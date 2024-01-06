@@ -6,7 +6,7 @@ import math
 #----------------------------------------------------------------------------------------------------- # 
 # Logistics function 
 #----------------------------------------------------------------------------------------------------- # 
-def rating_to_winrate(team_one: str, team_two: str, league_name: list[tuple[str, float]]) -> list:
+def rating_to_winrate(team_one: str, team_two: str, league_name: list[tuple[str, float]]) -> list(float):
     '''
         
         Parameters: 
