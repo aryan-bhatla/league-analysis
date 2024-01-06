@@ -29,29 +29,29 @@ def perform_random_forest(data: pd.DataFrame, seed: int) -> tuple[float, float, 
     
     '''
     # Split data into dependent and independent variables
-    X = data.drop(['Team', 'Pos', 'GP', 'W%', 'KDA'], axis = 1)                   # indepdendent variables = other statistics
+    X = data.drop(['Team', 'Pos', 'GP', 'W%', 'KDA', 'STL'], axis = 1)                   # indepdendent variables = other statistics
     y = data['W%']                                                                # dependent variable = winrate 
     weights = data['GP']                                                          # weigh each row depending on number of games played   
 
     # K-fold validation setup
     k = 10
-    kf = KFold(n_splits=k, shuffle=True, random_state=42)
+    kf = KFold(n_splits = k, shuffle = True, random_state = 42)
 
     # Model initialization
-    rf_model = RandomForestRegressor(n_estimators=1000, random_state=seed)
+    rf_model = RandomForestRegressor(n_estimators = 100, random_state = seed)
 
     # Metrics initialization
     r2_scores = []
     mse_scores = []
 
     # K-Fold validation loop
-    for train_index, test_index in tqdm(kf.split(X), total=k, desc="RF KFold Progress"):
+    for train_index, test_index in tqdm(kf.split(X), total = k, desc = "RF KFold Progress"):
         X_train, X_test = X.iloc[train_index], X.iloc[test_index]
         y_train, y_test = y.iloc[train_index], y.iloc[test_index]
         weights_train = weights.iloc[train_index]
 
         # Fit the model
-        rf_model.fit(X_train, y_train, sample_weight=weights_train)
+        rf_model.fit(X_train, y_train, sample_weight = weights_train)
 
         # Predict and evaluate
         y_pred = rf_model.predict(X_test)
@@ -59,7 +59,7 @@ def perform_random_forest(data: pd.DataFrame, seed: int) -> tuple[float, float, 
         mse_scores.append(mean_squared_error(y_test, y_pred))
 
     # Feature importance
-    feature_importances = pd.DataFrame(rf_model.feature_importances_, index=X_train.columns, columns=['Importance']).sort_values('Importance', ascending=False)
+    feature_importances = pd.DataFrame(rf_model.feature_importances_, index = X_train.columns, columns = ['rf_Importance']).sort_values('rf_Importance', ascending = False)
 
     return np.mean(r2_scores), np.mean(mse_scores), feature_importances
 
@@ -81,13 +81,13 @@ def perform_linear_regression(data: pd.DataFrame, seed: int) -> tuple[float, flo
     
     '''
     # Split data into dependent and independent variables
-    X = data.drop(['Team', 'Pos', 'GP', 'W%', 'KDA'], axis = 1)                   # indepdendent variables = other statistics
+    X = data.drop(['Team', 'Pos', 'GP', 'W%', 'KDA', 'STL'], axis = 1)                   # indepdendent variables = other statistics
     y = data['W%']                                                                # dependent variable = winrate 
     weights = data['GP']                                                          # weigh each row depending on number of games played
 
     # K-fold validation setup
     k = 10
-    kf = KFold(n_splits=k, shuffle=True, random_state=seed)
+    kf = KFold(n_splits = k, shuffle = True, random_state = seed)
 
     # Model and scaler initialization
     lr_model = LinearRegression()
@@ -98,7 +98,7 @@ def perform_linear_regression(data: pd.DataFrame, seed: int) -> tuple[float, flo
     mse_scores = []
 
     # K-Fold validation loop
-    for train_index, test_index in tqdm(kf.split(X), total=k, desc="LR KFold Progress"):
+    for train_index, test_index in tqdm(kf.split(X), total = k, desc = "LR KFold Progress"):
         X_train, X_test = X.iloc[train_index], X.iloc[test_index]
         y_train, y_test = y.iloc[train_index], y.iloc[test_index]
         weights_train = weights.iloc[train_index]
@@ -108,7 +108,7 @@ def perform_linear_regression(data: pd.DataFrame, seed: int) -> tuple[float, flo
         X_test_scaled = scaler.transform(X_test)
 
         # Fit the model
-        lr_model.fit(X_train_scaled, y_train, sample_weight=weights_train)
+        lr_model.fit(X_train_scaled, y_train, sample_weight = weights_train)
 
         # Predict and evaluate
         y_pred = lr_model.predict(X_test_scaled)
@@ -116,7 +116,7 @@ def perform_linear_regression(data: pd.DataFrame, seed: int) -> tuple[float, flo
         mse_scores.append(mean_squared_error(y_test, y_pred))
 
     # Coefficients
-    coefficients = pd.DataFrame(lr_model.coef_, X_train.columns, columns=['Coefficient'])
+    coefficients = pd.DataFrame(lr_model.coef_, X_train.columns, columns = ['Coefficient'])
 
     return np.mean(r2_scores), np.mean(mse_scores), coefficients
 
@@ -137,29 +137,29 @@ def perform_xgboost(data: pd.DataFrame, seed: int) -> tuple[float, float, float]
     
     '''
     # Split data into dependent and independent variables
-    X = data.drop(['Team', 'Pos', 'GP', 'W%', 'KDA'], axis = 1)                   # indepdendent variables = other statistics
+    X = data.drop(['Team', 'Pos', 'GP', 'W%', 'KDA', 'STL'], axis = 1)                   # indepdendent variables = other statistics
     y = data['W%']                                                                # dependent variable = winrate 
     weights = data['GP']                                                          # weigh each row depending on number of games played   
 
     # K-fold validation setup
     k = 10
-    kf = KFold(n_splits=k, shuffle=True, random_state=42)
+    kf = KFold(n_splits = k, shuffle = True, random_state = 42)
 
     # Model initialization
-    xg_model = XGBRegressor(n_estimators=1000, random_state=seed)
+    xg_model = XGBRegressor(n_estimators = 100, random_state = seed)
 
     # Metrics initialization
     r2_scores = []
     mse_scores = []
 
     # K-Fold validation loop
-    for train_index, test_index in tqdm(kf.split(X), total=k, desc="xgboost KFold Progress"):
+    for train_index, test_index in tqdm(kf.split(X), total = k, desc = "xgboost KFold Progress"):
         X_train, X_test = X.iloc[train_index], X.iloc[test_index]
         y_train, y_test = y.iloc[train_index], y.iloc[test_index]
         weights_train = weights.iloc[train_index]
 
         # Fit the model
-        xg_model.fit(X_train, y_train, sample_weight=weights_train)
+        xg_model.fit(X_train, y_train, sample_weight = weights_train)
 
         # Predict and evaluate
         y_pred = xg_model.predict(X_test)
@@ -167,6 +167,6 @@ def perform_xgboost(data: pd.DataFrame, seed: int) -> tuple[float, float, float]
         mse_scores.append(mean_squared_error(y_test, y_pred))
 
     # Feature importance
-    xg_feature_importances = pd.DataFrame(xg_model.feature_importances_, index=X_train.columns, columns=['xgboost']).sort_values('xgboost', ascending=False)
+    xg_feature_importances = pd.DataFrame(xg_model.feature_importances_, index = X_train.columns, columns = ['xg_Importance']).sort_values('xg_Importance', ascending = False)
 
     return np.mean(r2_scores), np.mean(mse_scores), xg_feature_importances

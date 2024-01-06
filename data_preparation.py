@@ -37,7 +37,7 @@ def prepare_data(pathname: str, *additional_pathname: str) -> pd.DataFrame:
             dataframes.append(df)
 
     # Concatenate all data together
-    joined_data = pd.concat(dataframes, ignore_index=True)
+    joined_data = pd.concat(dataframes, ignore_index = True)
 
     # Clean initial data 
     cleaned_data = helpers.cleanup_data(joined_data)

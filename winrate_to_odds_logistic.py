@@ -1,7 +1,7 @@
 #----------------------------------------------------------------------------------------------------- # 
 # Logistics function 
 #----------------------------------------------------------------------------------------------------- # 
-def winrate_to_odds(team_one_winrate: float, team_two_winrate: float) -> list(float):
+def winrate_to_odds(team_one_winrate: float, team_two_winrate: float) -> list[float]:
     '''
         
         Parameters: 

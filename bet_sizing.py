@@ -16,7 +16,7 @@ def kelly_bet(calculated_win_prob: float, odds_your_team: float, odds_other_team
     # Calculate win probability that bookmaker has determined 
     implied_win_prob = odds_your_team / (odds_your_team + odds_other_team) 
 
-    # Setup Kelly equation
+    # Set-up Kelly equation
     numerator = (odds_your_team * calculated_win_prob) - implied_win_prob 
 
     # Derive maximal bet size 

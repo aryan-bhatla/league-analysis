@@ -35,7 +35,7 @@ def create_scatter_plot(data: pd.DataFrame, columns: list, title: str, xlabel: s
 
     for i, column in enumerate(columns):
         x_values = data[column]
-        plt.scatter(x_values, y_values, color=colors[i], label=column, alpha=0.6)
+        plt.scatter(x_values, y_values, color = colors[i], label = column, alpha = 0.6)
 
     # Plot customization
     plt.xlabel(xlabel)
@@ -51,7 +51,7 @@ def create_scatter_plot(data: pd.DataFrame, columns: list, title: str, xlabel: s
 #----------------------------------------------------------------------------------------------------- #
 # Data columns
 #----------------------------------------------------------------------------------------------------- # 
-methods_list = ['Coefficient', 'Importance', 'xgboost']
+methods_list = ['Coefficient', 'rf_Importance', 'xg_Importance']
 
 columns_dict = {}
 
@@ -60,8 +60,8 @@ for name in methods_list:
                                        'Jungle_Avg_' + name, 'Top_Avg_' + name]
         
 Coefficient_columns = columns_dict['Coefficient_columns']
-Importance_columns = columns_dict['Importance_columns']
-xgboost_columns = columns_dict['xgboost_columns']
+rf_Importance_columns = columns_dict['rf_Importance_columns']
+xg_Importance_columns = columns_dict['xg_Importance_columns']
 
 
 #----------------------------------------------------------------------------------------------------- #
@@ -73,10 +73,10 @@ create_scatter_plot(visualisation_results, Coefficient_columns, 'Average Coeffic
 #----------------------------------------------------------------------------------------------------- #
 # (Random Forest) Importance plot
 #----------------------------------------------------------------------------------------------------- # 
-create_scatter_plot(visualisation_results, Importance_columns, 'Average Importance Comparison', 'Importance Values')
+create_scatter_plot(visualisation_results, rf_Importance_columns, 'Average RF Importance Comparison', 'rf_Importance Values')
 
 
 #----------------------------------------------------------------------------------------------------- #
 # (xgboost) Importance plot
 #----------------------------------------------------------------------------------------------------- # 
-create_scatter_plot(visualisation_results, xgboost_columns, 'Average xgboost Values Comparison', 'xgboost Values')
+create_scatter_plot(visualisation_results, xg_Importance_columns, 'Average xg Importance Comparison', 'xg_Importance Values')

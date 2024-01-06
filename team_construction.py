@@ -2,7 +2,7 @@
 # Modules
 #----------------------------------------------------------------------------------------------------- # 
 import data_preparation
-import rating_to_winrate as logistic
+import rating_to_winrate_logistic as logistic
 import pandas as pd
 import rating_calculation as rating 
 
@@ -311,8 +311,8 @@ def calculate_team_ratings(teams: dict, normalization_factor: float = None) -> l
 
         for player in team_data.values():
 
-            # Calculate player rating using a specific method ("importance" or "coefficient")
-            ratings = rating.calc_player_rating(player, model_results, final_data, "importance")
+            # Calculate player rating using a specific method ("rf_importance" or "coefficient" or "xg_importance")
+            ratings = rating.calc_player_rating(player, model_results, final_data, "rf_importance")
             player_ratings.append(ratings)
 
         total_team_rating = sum(player_ratings)
@@ -340,7 +340,7 @@ lec_data = zip(LEC_teams, lec_team_ratings)
 
 # Example usage:
 team1 = "Gen_G"
-team2 = "T1"
+team2 = "DRX"
 result = logistic.rating_to_winrate(team1, team2, lck_data)
 print(f"Winrate for {team1}: {result[0]*100:.2f}%")
 print(f"Winrate for {team2}: {result[1]*100:.2f}%")

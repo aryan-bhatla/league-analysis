@@ -12,9 +12,9 @@ def calc_player_rating(player: str, model_results: pd.DataFrame, final_data: pd.
         
         Parameters: 
             player (str): Player to calculate rating for 
-            model_results (pd.DataFrame): Calculated importance/co-efficient values 
+            model_results (pd.DataFrame): Calculated rf_importance/co-efficient/xg_importance values 
             final_data (pd.DataFrame): Processed data
-            method (str): Method used to calculate rating, defaults to "coefficient", alternatively "importance" can be used
+            method (str): Method used to calculate rating, defaults to "coefficient", alternatively "rf_importance" or "xg_importance" can be used
 
         
         Returns: 

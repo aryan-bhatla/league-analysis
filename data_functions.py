@@ -18,7 +18,7 @@ def cleanup_data(joined_data: pd.DataFrame) -> pd.DataFrame:
     
     '''
     # Remove all '%' from columns
-    removed_data = joined_data.replace('%', '', regex=True)
+    removed_data = joined_data.replace('%', '', regex = True)
     
     # Convert all numerical strings to floats (4th column onwards)
     removed_data.iloc[:, 3:] = removed_data.iloc[:, 3:].astype(float)
@@ -88,10 +88,10 @@ def sum_data(replaced_data: pd.DataFrame) -> pd.DataFrame:
     # Sum stats for duplicate players 
     aggregated_data = replaced_data.groupby('Player').agg({col: 'sum' for col in replaced_data.columns[28:]})
     non_aggregated_data = replaced_data.drop_duplicates(subset=['Player']).iloc[:, :28]
-    merged_data = pd.merge(non_aggregated_data, aggregated_data, on='Player', how='left')
+    merged_data = pd.merge(non_aggregated_data, aggregated_data, on = 'Player', how = 'left')
 
     # Sort players alphabetically
-    sorted_data = merged_data.sort_values(by='Player', ascending=True)
+    sorted_data = merged_data.sort_values(by = 'Player', ascending = True)
 
     # Re-index with player names 
     indexed_data = sorted_data.set_index('Player')

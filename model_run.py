@@ -47,7 +47,7 @@ roles = ['Support', 'ADC', 'Middle', 'Jungle', 'Top']
 results = pd.DataFrame()
 
 # Loop over each iteration with tqdm for progress tracking
-for iteration in tqdm(range(num_iterations), desc="Overall Progress", unit="iteration"):
+for iteration in tqdm(range(num_iterations), desc = "Overall Progress", unit = "iteration"):
 
     # Set different seed per iteration 
     random_seed = iteration + 100
@@ -66,7 +66,7 @@ for iteration in tqdm(range(num_iterations), desc="Overall Progress", unit="iter
         xg_r2, xg_mse, xg_importances = models.perform_xgboost(role_data, seed = random_seed)
 
         # Store results
-        iteration_results = pd.concat([rf_importances, lr_coefficients, xg_importances], axis=1)
+        iteration_results = pd.concat([rf_importances, lr_coefficients, xg_importances], axis = 1)
         iteration_results.columns = [f'{role}_{col}_{iteration}' for col in iteration_results.columns]
         results = pd.concat([results, iteration_results], axis=1)
 
@@ -88,9 +88,9 @@ for role in roles:
         role_xg_importances.append(results[xg_col])
 
     # Calculate averages for coefficients and importance values
-    avg_coefficients = pd.concat(role_coefficients, axis=1).mean(axis=1)
-    avg_rf_importances = pd.concat(role_rf_importances, axis=1).mean(axis=1)
-    avg_xg_importances = pd.concat(role_xg_importances, axis=1).mean(axis=1)
+    avg_coefficients = pd.concat(role_coefficients, axis = 1).mean(axis = 1)
+    avg_rf_importances = pd.concat(role_rf_importances, axis = 1).mean(axis = 1)
+    avg_xg_importances = pd.concat(role_xg_importances, axis = 1).mean(axis = 1)
 
     # Store averages in separate DataFrames
     average_coefficients[f'{role}_Avg_Coefficient'] = avg_coefficients
@@ -98,7 +98,7 @@ for role in roles:
     average_xg_importances[f'{role}_Avg_xg_Importance'] = avg_xg_importances
 
 # Combine individual iteration results with average coefficients and importances
-final_results = pd.concat([results, average_coefficients, average_rf_importances, average_xg_importances], axis=1)
+final_results = pd.concat([results, average_coefficients, average_rf_importances, average_xg_importances], axis = 1)
 
 # Save to CSV
 final_results.to_csv('model_results.csv')
