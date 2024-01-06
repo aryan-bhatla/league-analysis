@@ -13,62 +13,70 @@ visualisation_results = pd.read_csv('model_results.csv', index_col = 0)
 
 
 #----------------------------------------------------------------------------------------------------- #
-# Co-efficient plot
+# Scatter plot function
 #----------------------------------------------------------------------------------------------------- # 
-# Columns to use for plotting
-coefficient_columns = ['Support_Avg_Coefficient', 'ADC_Avg_Coefficient', 'Middle_Avg_Coefficient',
-                       'Jungle_Avg_Coefficient', 'Top_Avg_Coefficient']
+def create_scatter_plot(data: pd.DataFrame, columns: list, title: str, xlabel: str):
+    """
+    Parameters:
+        data (DataFrame): The DataFrame containing the data to plot
+        columns (list): List of column names to be plotted
+        title (str): Title of the plot
+        xlabel (str): Label for the X-axis
 
-# Colors for each column
-colors = ['blue', 'orange', 'green', 'red', 'purple']
+    """
+    # Colors for each column
+    colors = ['blue', 'orange', 'green', 'red', 'purple']
 
-# Generate y-values as an array of equally spaced integers
-y_values = np.arange(len(visualisation_results))
+    # Generate y-values as an array of equally spaced integers
+    y_values = np.arange(len(data))
 
-# Plotting
-plt.figure(figsize=(10, 8))
+    # Plotting
+    plt.figure(figsize=(10, 8))
 
-for i, column in enumerate(coefficient_columns):
-    x_values = visualisation_results[column]
-    plt.scatter(x_values, y_values, color=colors[i], label=column, alpha=0.6)
+    for i, column in enumerate(columns):
+        x_values = data[column]
+        plt.scatter(x_values, y_values, color=colors[i], label=column, alpha=0.6)
 
-# Plot customization
-plt.xlabel('Coefficient Values')
-plt.ylabel('Y Labels')
-plt.yticks(y_values, visualisation_results.index)  
-plt.title('Average Coefficients Comparison')
-plt.legend()
-plt.tight_layout()
+    # Plot customization
+    plt.xlabel(xlabel)
+    plt.ylabel('Y Labels')
+    plt.yticks(y_values, data.index)  
+    plt.title(title)
+    plt.legend()
+    plt.tight_layout()
 
-plt.show()
+    plt.show()
 
 
 #----------------------------------------------------------------------------------------------------- #
-# Importance plot
+# Data columns
 #----------------------------------------------------------------------------------------------------- # 
-# Columns to use for plotting
-importance_columns = ['Support_Avg_Importance', 'ADC_Avg_Importance', 'Middle_Avg_Importance',
-                      'Jungle_Avg_Importance', 'Top_Avg_Importance']
+methods_list = ['Coefficient', 'Importance', 'xgboost']
 
-# Colors for each column
-colors = ['blue', 'orange', 'green', 'red', 'purple']
+columns_dict = {}
 
-# Generate y-values as an array of equally spaced integers
-y_values = np.arange(len(visualisation_results))
+for name in methods_list: 
+    columns_dict[name + '_columns'] = ['Support_Avg_' + name, 'ADC_Avg_' + name, 'Middle_Avg_' + name,
+                                       'Jungle_Avg_' + name, 'Top_Avg_' + name]
+        
+Coefficient_columns = columns_dict['Coefficient_columns']
+Importance_columns = columns_dict['Importance_columns']
+xgboost_columns = columns_dict['xgboost_columns']
 
-# Plotting
-plt.figure(figsize=(10, 8))
 
-for i, column in enumerate(importance_columns):
-    x_values = visualisation_results[column]
-    plt.scatter(x_values, y_values, color=colors[i], label=column, alpha=0.6)
+#----------------------------------------------------------------------------------------------------- #
+# (Linear Regression) Co-efficient plot
+#----------------------------------------------------------------------------------------------------- # 
+create_scatter_plot(visualisation_results, Coefficient_columns, 'Average Coefficients Comparison', 'Coefficient Values')
 
-# Plot customization
-plt.xlabel('Importance Values')
-plt.ylabel('Y Labels')
-plt.yticks(y_values, visualisation_results.index)  
-plt.title('Average Importance Comparison')
-plt.legend()
-plt.tight_layout()
 
-plt.show()
+#----------------------------------------------------------------------------------------------------- #
+# (Random Forest) Importance plot
+#----------------------------------------------------------------------------------------------------- # 
+create_scatter_plot(visualisation_results, Importance_columns, 'Average Importance Comparison', 'Importance Values')
+
+
+#----------------------------------------------------------------------------------------------------- #
+# (xgboost) Importance plot
+#----------------------------------------------------------------------------------------------------- # 
+create_scatter_plot(visualisation_results, xgboost_columns, 'Average xgboost Values Comparison', 'xgboost Values')

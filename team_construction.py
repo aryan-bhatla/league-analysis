@@ -297,7 +297,7 @@ def calculate_team_ratings(teams: dict, normalization_factor: float = None) -> l
     '''
 
     Parameters:
-        teams (dict): Dictionary containing teams' data.
+        teams (dict): Dictionary containing teams' data
         normalization_factor (float): Factor to normalize team ratings, defaults to None, alternatively a float can be used
 
     Returns:
