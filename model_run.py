@@ -62,34 +62,43 @@ for iteration in tqdm(range(num_iterations), desc="Overall Progress", unit="iter
         # Perform Linear Regression analysis
         lr_r2, lr_mse, lr_coefficients = models.perform_linear_regression(role_data, seed = random_seed)
 
+        # Perform xgboost analysis 
+        xg_r2, xg_mse, xg_importances = models.perform_xgboost(role_data, seed = random_seed)
+
         # Store results
-        iteration_results = pd.concat([rf_importances, lr_coefficients], axis=1)
+        iteration_results = pd.concat([rf_importances, lr_coefficients, xg_importances], axis=1)
         iteration_results.columns = [f'{role}_{col}_{iteration}' for col in iteration_results.columns]
         results = pd.concat([results, iteration_results], axis=1)
 
 # Calculate averages of coefficients and importance values across iterations for each role
 average_coefficients = pd.DataFrame()
-average_importances = pd.DataFrame()
+average_rf_importances = pd.DataFrame()
+average_xg_importances = pd.DataFrame()
 
 for role in roles:
     role_coefficients = []
-    role_importances = []
+    role_rf_importances = []
+    role_xg_importances = []
     for iteration in range(num_iterations):
-        rf_col = f'{role}_Importance_{iteration}'
+        rf_col = f'{role}_rf_Importance_{iteration}'
         lr_col = f'{role}_Coefficient_{iteration}'
-        role_importances.append(results[rf_col])
+        xg_col = f'{role}_xg_Importance_{iteration}'
+        role_rf_importances.append(results[rf_col])
         role_coefficients.append(results[lr_col])
+        role_xg_importances.append(results[xg_col])
 
     # Calculate averages for coefficients and importance values
     avg_coefficients = pd.concat(role_coefficients, axis=1).mean(axis=1)
-    avg_importances = pd.concat(role_importances, axis=1).mean(axis=1)
+    avg_rf_importances = pd.concat(role_rf_importances, axis=1).mean(axis=1)
+    avg_xg_importances = pd.concat(role_xg_importances, axis=1).mean(axis=1)
 
     # Store averages in separate DataFrames
     average_coefficients[f'{role}_Avg_Coefficient'] = avg_coefficients
-    average_importances[f'{role}_Avg_Importance'] = avg_importances
+    average_rf_importances[f'{role}_Avg_rf_Importance'] = avg_rf_importances
+    average_xg_importances[f'{role}_Avg_xg_Importance'] = avg_xg_importances
 
 # Combine individual iteration results with average coefficients and importances
-final_results = pd.concat([results, average_coefficients, average_importances], axis=1)
+final_results = pd.concat([results, average_coefficients, average_rf_importances, average_xg_importances], axis=1)
 
 # Save to CSV
 final_results.to_csv('model_results.csv')
