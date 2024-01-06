@@ -3,3 +3,7 @@
 2. docker tag league-analysis-image aryanbhatla/league-analysis-image
 
 3. docker push aryanbhatla/league-analysis-image
+
+4. docker pull aryanbhatla/league-analysis-image 
+
+5. docker run aryanbhatla/league-analysis-image 
