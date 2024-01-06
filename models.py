@@ -4,12 +4,13 @@
 import numpy as np 
 import pandas as pd
 
-from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from sklearn.model_selection import KFold
 from sklearn.preprocessing import StandardScaler
 from tqdm import tqdm
+from xgboost import XGBRegressor
 
 
 #----------------------------------------------------------------------------------------------------- # 
@@ -118,3 +119,54 @@ def perform_linear_regression(data: pd.DataFrame, seed: int) -> tuple[float, flo
     coefficients = pd.DataFrame(lr_model.coef_, X_train.columns, columns=['Coefficient'])
 
     return np.mean(r2_scores), np.mean(mse_scores), coefficients
+
+
+#----------------------------------------------------------------------------------------------------- # 
+# xgboost 
+#----------------------------------------------------------------------------------------------------- # 
+def perform_xgboost(data: pd.DataFrame, seed: int) -> tuple[float, float, float]:
+    '''
+        
+        Parameters: 
+            data (pd.DataFrame): Statistics for different roles (Support, ADC, Middle, Jungle, Top)
+        
+        Returns: 
+            np.mean(r2_scores) (float): Mean R^2 over K folds 
+            np.mean(mse_scores) (float): Mean MSE over K folds 
+            xg_feature_importances (float): Importance of each independent variable relative to each other 
+    
+    '''
+    # Split data into dependent and independent variables
+    X = data.drop(['Team', 'Pos', 'GP', 'W%', 'KDA'], axis = 1)                   # indepdendent variables = other statistics
+    y = data['W%']                                                                # dependent variable = winrate 
+    weights = data['GP']                                                          # weigh each row depending on number of games played   
+
+    # K-fold validation setup
+    k = 10
+    kf = KFold(n_splits=k, shuffle=True, random_state=42)
+
+    # Model initialization
+    xg_model = XGBRegressor(n_estimators=1000, random_state=seed)
+
+    # Metrics initialization
+    r2_scores = []
+    mse_scores = []
+
+    # K-Fold validation loop
+    for train_index, test_index in tqdm(kf.split(X), total=k, desc="xgboost KFold Progress"):
+        X_train, X_test = X.iloc[train_index], X.iloc[test_index]
+        y_train, y_test = y.iloc[train_index], y.iloc[test_index]
+        weights_train = weights.iloc[train_index]
+
+        # Fit the model
+        xg_model.fit(X_train, y_train, sample_weight=weights_train)
+
+        # Predict and evaluate
+        y_pred = xg_model.predict(X_test)
+        r2_scores.append(r2_score(y_test, y_pred))
+        mse_scores.append(mean_squared_error(y_test, y_pred))
+
+    # Feature importance
+    xg_feature_importances = pd.DataFrame(xg_model.feature_importances_, index=X_train.columns, columns=['xgboost']).sort_values('xgboost', ascending=False)
+
+    return np.mean(r2_scores), np.mean(mse_scores), xg_feature_importances
