@@ -30,5 +30,8 @@ ENV PATH="/root/.local/bin:${PATH}"
 # Copy everything in local directory to /app directory in container 
 ADD . /app
 
+# Expose Streamlit port in container (this is purely convention - doesn't actually open the port)
+EXPOSE 8501
+
 # Run the application in container
-CMD [ "python", "app.py" ]
+CMD ["streamlit", "run", "app.py"]
