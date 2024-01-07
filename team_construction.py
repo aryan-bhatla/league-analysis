@@ -223,7 +223,6 @@ LEC_teams = {'Fnatic': Fnatic,
 #----------------------------------------------------------------------------------------------------- # 
 # All teams 
 #----------------------------------------------------------------------------------------------------- # 
-# Copying the LCK, LCS, and LEC teams
 all_teams = {
     'LCK': {'Dplus_KIA': Dplus_KIA,
             'DRX': DRX,
@@ -290,47 +289,11 @@ LCK_normalisation = 1.0
 
 
 #----------------------------------------------------------------------------------------------------- #
-# Team Rating function 
-#----------------------------------------------------------------------------------------------------- # 
-def calculate_team_ratings(teams: dict, normalization_factor: float = None) -> list:
-    '''
-
-    Parameters:
-        teams (dict): Dictionary containing teams' data
-        normalization_factor (float): Factor to normalize team ratings, defaults to None, alternatively a float can be used
-
-    Returns:
-        team_ratings (list): List of total team ratings
-
-    '''
-    team_ratings = []
-
-    for team_name, team_data in teams.items():
-        player_ratings = []
-
-        for player in team_data.values():
-
-            # Calculate player rating using a specific method ("rf_importance" or "coefficient" or "xg_importance")
-            ratings = logistic.calc_player_rating(player, model_results, final_data, "rf_importance")
-            player_ratings.append(ratings)
-
-        total_team_rating = sum(player_ratings)
-
-        # Normalize total team rating if a normalization factor is provided
-        if normalization_factor:
-            total_team_rating /= normalization_factor
-
-        team_ratings.append(total_team_rating)
-
-    return team_ratings
-
-
-#----------------------------------------------------------------------------------------------------- #
 # LCK, LCS, LEC ratings
 #----------------------------------------------------------------------------------------------------- # 
-lck_team_ratings = calculate_team_ratings(LCK_teams)
-lcs_team_ratings = calculate_team_ratings(LCS_teams, LCS_normalisation)
-lec_team_ratings = calculate_team_ratings(LEC_teams, LEC_normalisation)
+lck_team_ratings = logistic.calculate_team_ratings(LCK_teams, model_results, final_data)
+lcs_team_ratings = logistic.calculate_team_ratings(LCS_teams, model_results, final_data, LCS_normalisation)
+lec_team_ratings = logistic.calculate_team_ratings(LEC_teams, model_results, final_data, LEC_normalisation)
 
 lck_data = zip(LCK_teams, lck_team_ratings)
 lcs_data = zip(LCS_teams, lcs_team_ratings)

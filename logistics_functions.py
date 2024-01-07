@@ -71,6 +71,44 @@ def calc_player_rating(player: str, model_results: pd.DataFrame, final_data: pd.
     return rating
 
 
+#----------------------------------------------------------------------------------------------------- #
+# Team Rating function 
+#----------------------------------------------------------------------------------------------------- # 
+def calculate_team_ratings(teams: dict, model_results: pd.DataFrame, final_data: pd.DataFrame, normalization_factor: float = None) -> list:
+    '''
+
+    Parameters:
+        teams (dict): Dictionary containing teams' data
+        model_results (pd.DataFrame): Calculated rf_importance/co-efficient/xg_importance values 
+        final_data (pd.DataFrame): Processed data
+        normalization_factor (float): Factor to normalize team ratings, defaults to None, alternatively a float can be used
+
+    Returns:
+        team_ratings (list): List of total team ratings
+
+    '''
+    team_ratings = []
+
+    for team_name, team_data in teams.items():
+        player_ratings = []
+
+        for player in team_data.values():
+
+            # Calculate player rating using a specific method ("rf_importance" or "coefficient" or "xg_importance")
+            ratings = calc_player_rating(player, model_results, final_data, "rf_importance")
+            player_ratings.append(ratings)
+
+        total_team_rating = sum(player_ratings)
+
+        # Normalize total team rating if a normalization factor is provided
+        if normalization_factor:
+            total_team_rating /= normalization_factor
+
+        team_ratings.append(total_team_rating)
+
+    return team_ratings
+
+
 #----------------------------------------------------------------------------------------------------- # 
 # Rating to winrate function 
 #----------------------------------------------------------------------------------------------------- # 
