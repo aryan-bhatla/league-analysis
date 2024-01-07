@@ -259,19 +259,19 @@ all_teams = {
 # Data preprocessing
 #----------------------------------------------------------------------------------------------------- # 
 # Load data 
-final_data = data.prepare_data("data/LCK_Player_Data",             # Korean main league
-                                           "data/LCKCL_Player_Data",           # Korean sub league  
-                                           "data/LCS_Player_Data",             # North American main league 
-                                           "data/LCSA_Player_Data",            # North American sub league 
-                                           "data/LEC_Player_Data",             # European main league 
-                                           "data/LFL_Player_Data",             # European sub league
-                                           "data/PRM_Player_Data",             # European sub league 
-                                           "data/NLC_Player_Data",             # European sub league
-                                           "data/MSI_Player_Data",             # Mid year tournament 
-                                           "data/Worlds_Player_Data")          # World championship tournament 
+player_data = data.prepare_data("data/LCK_Player_Data",             # Korean main league
+                                "data/LCKCL_Player_Data",           # Korean sub league  
+                                "data/LCS_Player_Data",             # North American main league 
+                                "data/LCSA_Player_Data",            # North American sub league 
+                                "data/LEC_Player_Data",             # European main league 
+                                "data/LFL_Player_Data",             # European sub league
+                                "data/PRM_Player_Data",             # European sub league 
+                                "data/NLC_Player_Data",             # European sub league
+                                "data/MSI_Player_Data",             # Mid year tournament 
+                                "data/Worlds_Player_Data")          # World championship tournament 
 
 # Clean up final row containing NaN
-final_data.drop(final_data.tail(1).index, inplace = True)
+player_data.drop(player_data.tail(1).index, inplace = True)
 
 
 #----------------------------------------------------------------------------------------------------- #
@@ -291,9 +291,9 @@ LCK_normalisation = 1.0
 #----------------------------------------------------------------------------------------------------- #
 # LCK, LCS, LEC ratings
 #----------------------------------------------------------------------------------------------------- # 
-lck_team_ratings = logistic.calculate_team_ratings(LCK_teams, model_results, final_data)
-lcs_team_ratings = logistic.calculate_team_ratings(LCS_teams, model_results, final_data, LCS_normalisation)
-lec_team_ratings = logistic.calculate_team_ratings(LEC_teams, model_results, final_data, LEC_normalisation)
+lck_team_ratings = logistic.calculate_team_ratings(LCK_teams, model_results, player_data)
+lcs_team_ratings = logistic.calculate_team_ratings(LCS_teams, model_results, player_data, LCS_normalisation)
+lec_team_ratings = logistic.calculate_team_ratings(LEC_teams, model_results, player_data, LEC_normalisation)
 
 lck_data = zip(LCK_teams, lck_team_ratings)
 lcs_data = zip(LCS_teams, lcs_team_ratings)

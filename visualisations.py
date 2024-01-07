@@ -65,18 +65,8 @@ xg_Importance_columns = columns_dict['xg_Importance_columns']
 
 
 #----------------------------------------------------------------------------------------------------- #
-# (Linear Regression) Co-efficient plot
+# Linear Regression Co-efficient, Random Forest Importance, xgboost Importance plots
 #----------------------------------------------------------------------------------------------------- # 
 create_scatter_plot(visualisation_results, Coefficient_columns, 'Average Coefficients Comparison', 'Coefficient Values')
-
-
-#----------------------------------------------------------------------------------------------------- #
-# (Random Forest) Importance plot
-#----------------------------------------------------------------------------------------------------- # 
 create_scatter_plot(visualisation_results, rf_Importance_columns, 'Average RF Importance Comparison', 'rf_Importance Values')
-
-
-#----------------------------------------------------------------------------------------------------- #
-# (xgboost) Importance plot
-#----------------------------------------------------------------------------------------------------- # 
 create_scatter_plot(visualisation_results, xg_Importance_columns, 'Average xg Importance Comparison', 'xg_Importance Values')
