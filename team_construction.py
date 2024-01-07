@@ -3,8 +3,7 @@
 #----------------------------------------------------------------------------------------------------- # 
 import data_preparation
 import logistics_functions as logistic
-import pandas as pd
-import rating_calculation as rating 
+import pandas as pd 
 
 
 #----------------------------------------------------------------------------------------------------- #
@@ -312,7 +311,7 @@ def calculate_team_ratings(teams: dict, normalization_factor: float = None) -> l
         for player in team_data.values():
 
             # Calculate player rating using a specific method ("rf_importance" or "coefficient" or "xg_importance")
-            ratings = rating.calc_player_rating(player, model_results, final_data, "rf_importance")
+            ratings = logistic.calc_player_rating(player, model_results, final_data, "rf_importance")
             player_ratings.append(ratings)
 
         total_team_rating = sum(player_ratings)
