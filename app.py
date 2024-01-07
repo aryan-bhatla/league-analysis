@@ -24,7 +24,7 @@ lec_team_ratings = calculate_team_ratings(LEC_teams, LEC_normalisation)
 
 # Function to display data
 def display_data(teams, ratings, league_name):
-    st.subheader(f'{league_name} Teams and Ratings')
+    st.subheader(f'{league_name} Teams and Ratings using Random Forest Modelling')
     for team, rating in zip(teams, ratings):
         st.write(f"{team}: {rating}")
 
