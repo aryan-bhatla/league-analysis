@@ -261,16 +261,16 @@ all_teams = {
 # Data preprocessing
 #----------------------------------------------------------------------------------------------------- # 
 # Load data 
-final_data = data_preparation.prepare_data("LCK_Player_Data",             # Korean main league
-                                           "LCKCL_Player_Data",           # Korean sub league  
-                                           "LCS_Player_Data",             # North American main league 
-                                           "LCSA_Player_Data",            # North American sub league 
-                                           "LEC_Player_Data",             # European main league 
-                                           "LFL_Player_Data",             # European sub league
-                                           "PRM_Player_Data",             # European sub league 
-                                           "NLC_Player_Data",             # European sub league
-                                           "MSI_Player_Data",             # Mid year tournament 
-                                           "Worlds_Player_Data")          # World championship tournament 
+final_data = data_preparation.prepare_data("data/LCK_Player_Data",             # Korean main league
+                                           "data/LCKCL_Player_Data",           # Korean sub league  
+                                           "data/LCS_Player_Data",             # North American main league 
+                                           "data/LCSA_Player_Data",            # North American sub league 
+                                           "data/LEC_Player_Data",             # European main league 
+                                           "data/LFL_Player_Data",             # European sub league
+                                           "data/PRM_Player_Data",             # European sub league 
+                                           "data/NLC_Player_Data",             # European sub league
+                                           "data/MSI_Player_Data",             # Mid year tournament 
+                                           "data/Worlds_Player_Data")          # World championship tournament 
 
 # Clean up final row containing NaN
 final_data.drop(final_data.tail(1).index, inplace = True)

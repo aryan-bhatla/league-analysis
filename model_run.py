@@ -12,11 +12,11 @@ from tqdm import tqdm
 # Data preprocessing
 #----------------------------------------------------------------------------------------------------- # 
 # Load data 
-final_data = data_preparation.prepare_data("LCK_Player_Data",
-                                           "LCS_Player_Data",
-                                           "LEC_Player_Data",
-                                           "MSI_Player_Data",
-                                           "Worlds_Player_Data")
+final_data = data_preparation.prepare_data("data/LCK_Player_Data",
+                                           "data/LCS_Player_Data",
+                                           "data/LEC_Player_Data",
+                                           "data/MSI_Player_Data",
+                                           "data/Worlds_Player_Data")
 
 # Clean up final row containing NaN
 final_data.drop(final_data.tail(1).index, inplace = True)
