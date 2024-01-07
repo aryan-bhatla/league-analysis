@@ -2,7 +2,7 @@
 # Modules
 #----------------------------------------------------------------------------------------------------- # 
 import data_preparation
-import rating_to_winrate_logistic as logistic
+import logistics_functions as logistic
 import pandas as pd
 import rating_calculation as rating 
 
