@@ -24,7 +24,7 @@ RUN pip install --upgrade pip
 # Pip install required packages in container
 RUN pip3 install --user -r requirements.txt 
 
-# Set the PATH in container to include the '/root/.local/bin' directory where f2py and Flask are installed 
+# Set the PATH in container to include the '/root/.local/bin' directory where f2py is installed 
 ENV PATH="/root/.local/bin:${PATH}"
 
 # Copy everything in local directory to /app directory in container 

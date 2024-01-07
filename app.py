@@ -1,10 +1,7 @@
 #----------------------------------------------------------------------------------------------------- # 
 # Modules
 #----------------------------------------------------------------------------------------------------- # 
-from flask import Flask, render_template
-
-# Set up instance of Flask so can be used by other modules 
-app = Flask(__name__)
+import streamlit as st
 
 from team_construction import calculate_team_ratings, LCK_teams, LCS_teams, LEC_teams
 
@@ -12,28 +9,26 @@ from team_construction import calculate_team_ratings, LCK_teams, LCS_teams, LEC_
 #----------------------------------------------------------------------------------------------------- # 
 # App main
 #----------------------------------------------------------------------------------------------------- # 
-@app.route('/')
-def index(): 
-    
-    # Decide normalisation
-    LCS_normalisation = 1.25
-    LEC_normalisation = 1.15
-    LCK_normalisation = 1.0
+# Streamlit title
+st.title('Team Ratings')
 
-    # Calculate team ratings
-    lck_team_ratings = calculate_team_ratings(LCK_teams, LCK_normalisation)
-    lcs_team_ratings = calculate_team_ratings(LCS_teams, LCS_normalisation)
-    lec_team_ratings = calculate_team_ratings(LEC_teams, LEC_normalisation)
+# Decide normalisation
+LCS_normalisation = 1.25
+LEC_normalisation = 1.15
+LCK_normalisation = 1.0
 
-    # Collapse the data into a single variable
-    lck_data = zip(LCK_teams, lck_team_ratings)
-    lcs_data = zip(LCS_teams, lcs_team_ratings)
-    lec_data = zip(LEC_teams, lec_team_ratings)
+# Calculate team ratings
+lck_team_ratings = calculate_team_ratings(LCK_teams, LCK_normalisation)
+lcs_team_ratings = calculate_team_ratings(LCS_teams, LCS_normalisation)
+lec_team_ratings = calculate_team_ratings(LEC_teams, LEC_normalisation)
 
-    return render_template('index.html', lck_data = lck_data, 
-                                         lcs_data = lcs_data, 
-                                         lec_data = lec_data)
+# Function to display data
+def display_data(teams, ratings, league_name):
+    st.subheader(f'{league_name} Teams and Ratings')
+    for team, rating in zip(teams, ratings):
+        st.write(f"{team}: {rating}")
 
-if __name__ == '__main__': 
-    app.run(debug = True, host = '0.0.0.0', port = 80)
-
+# Display data for each league
+display_data(LCK_teams, lck_team_ratings, 'LCK')
+display_data(LCS_teams, lcs_team_ratings, 'LCS')
+display_data(LEC_teams, lec_team_ratings, 'LEC')
