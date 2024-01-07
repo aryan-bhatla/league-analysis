@@ -6,4 +6,4 @@
 
 4. docker pull aryanbhatla/league-analysis-image 
 
-5. docker run -p 8080:80 aryanbhatla/league-analysis-image 
+5. docker run -p 8501:8501 aryanbhatla/league-analysis-image 
