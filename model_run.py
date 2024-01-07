@@ -1,7 +1,7 @@
 #----------------------------------------------------------------------------------------------------- # 
 # Modules
 #----------------------------------------------------------------------------------------------------- # 
-import data_preparation 
+import data_functions as data
 import models
 import pandas as pd
 
@@ -12,7 +12,7 @@ from tqdm import tqdm
 # Data preprocessing
 #----------------------------------------------------------------------------------------------------- # 
 # Load data 
-final_data = data_preparation.prepare_data("data/LCK_Player_Data",
+final_data = data.prepare_data("data/LCK_Player_Data",
                                            "data/LCS_Player_Data",
                                            "data/LEC_Player_Data",
                                            "data/MSI_Player_Data",

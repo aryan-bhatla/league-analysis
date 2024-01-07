@@ -1,7 +1,7 @@
 #----------------------------------------------------------------------------------------------------- # 
 # Modules
 #----------------------------------------------------------------------------------------------------- # 
-import data_preparation
+import data_functions as data
 import logistics_functions as logistic
 import pandas as pd 
 
@@ -259,7 +259,7 @@ all_teams = {
 # Data preprocessing
 #----------------------------------------------------------------------------------------------------- # 
 # Load data 
-final_data = data_preparation.prepare_data("data/LCK_Player_Data",             # Korean main league
+final_data = data.prepare_data("data/LCK_Player_Data",             # Korean main league
                                            "data/LCKCL_Player_Data",           # Korean sub league  
                                            "data/LCS_Player_Data",             # North American main league 
                                            "data/LCSA_Player_Data",            # North American sub league 
