@@ -17,7 +17,7 @@ Player data is sourced from [Oracle's Elixir](https://oracleselixir.com/), colle
 #### Option 1: Python Based
 - **Prerequisites**: Python 3.9.7
 - **Setup**:
-  - Clone the repository: `git clone [repository URL]`
+  - Clone the repository: `git clone https://github.com/aryan-bhatla/league-analysis.git`
   - Navigate to the project directory
   - Install dependencies: `pip install -r requirements.txt`
 - **Running the App**: Execute `python app.py` in the project directory. Some environment/variable setups may vary between users.
