@@ -283,26 +283,48 @@ model_results = pd.read_csv('model_results.csv', index_col = 0)
 #----------------------------------------------------------------------------------------------------- #
 # Elo normalisation factor
 #----------------------------------------------------------------------------------------------------- # 
-LCS_normalisation = 1.25
-LEC_normalisation = 1.15
+LCS_normalisation = 1.20
+LEC_normalisation = 1.125
 LCK_normalisation = 1.0
 
 
 #----------------------------------------------------------------------------------------------------- #
 # LCK, LCS, LEC ratings
 #----------------------------------------------------------------------------------------------------- # 
-lck_team_ratings = logistic.calculate_team_ratings(LCK_teams, model_results, player_data)
-lcs_team_ratings = logistic.calculate_team_ratings(LCS_teams, model_results, player_data, LCS_normalisation)
-lec_team_ratings = logistic.calculate_team_ratings(LEC_teams, model_results, player_data, LEC_normalisation)
+model_method = "rf_importance"
+
+lck_team_ratings = logistic.calculate_team_ratings(LCK_teams, model_results, player_data, model_method)
+lcs_team_ratings = logistic.calculate_team_ratings(LCS_teams, model_results, player_data, model_method, LCS_normalisation)
+lec_team_ratings = logistic.calculate_team_ratings(LEC_teams, model_results, player_data, model_method, LEC_normalisation)
 
 lck_data = zip(LCK_teams, lck_team_ratings)
 lcs_data = zip(LCS_teams, lcs_team_ratings)
 lec_data = zip(LEC_teams, lec_team_ratings)
 
+lck_data_dict = dict(zip(LCK_teams.keys(), lck_team_ratings))
+lcs_data_dict = dict(zip(LCS_teams.keys(), lcs_team_ratings))
+lec_data_dict = dict(zip(LEC_teams.keys(), lec_team_ratings))
 
-# Example usage:
-team1 = "Gen_G"
-team2 = "DRX"
-result = logistic.rating_to_winrate(team1, team2, lck_data)
-print(f"Winrate for {team1}: {result[0]*100:.2f}%")
-print(f"Winrate for {team2}: {result[1]*100:.2f}%")
+
+#----------------------------------------------------------------------------------------------------- #
+# LCK, LCS, LEC ratings tables
+#----------------------------------------------------------------------------------------------------- # 
+lck_ratings = logistic.ratings_table(LCK_teams, lck_team_ratings)
+lcs_ratings = logistic.ratings_table(LCS_teams, lcs_team_ratings)
+lec_ratings = logistic.ratings_table(LEC_teams, lec_team_ratings)
+
+
+#----------------------------------------------------------------------------------------------------- #
+# LCK, LCS, LEC winrates tables 
+#----------------------------------------------------------------------------------------------------- # 
+lck_winrates = logistic.winrates_table(LCK_teams, lck_data_dict)
+lcs_winrates = logistic.winrates_table(LCS_teams, lcs_data_dict)
+lec_winrates = logistic.winrates_table(LEC_teams, lec_data_dict)
+
+
+#----------------------------------------------------------------------------------------------------- #
+# LCK, LCS, LEC odds tables 
+#----------------------------------------------------------------------------------------------------- # 
+lck_odds = logistic.odds_table(LCK_teams, lck_data_dict)
+lcs_odds = logistic.odds_table(LCS_teams, lcs_data_dict)
+lec_odds = logistic.odds_table(LEC_teams, lec_data_dict)
