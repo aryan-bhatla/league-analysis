@@ -22,7 +22,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN pip install --upgrade pip
 
 # Pip install required packages in container
-RUN pip3 install --user -r requirements.txt 
+RUN pip3 install -r requirements.txt 
 
 # Set the PATH in container to include the '/root/.local/bin' directory where f2py is installed 
 ENV PATH="/root/.local/bin:${PATH}"
