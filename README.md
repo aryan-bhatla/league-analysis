@@ -24,9 +24,9 @@ Player data is sourced from [Oracle's Elixir](https://oracleselixir.com/), colle
 
 #### Option 2: Docker Based
 - **Pulling the Project Image**:
-  - `docker pull aryanbhatla/league-analysis-image`
+  - `docker pull aryanbhatla/league-analysis-image:{tag}`
 - **Running as a Container**:
-  - `docker run -p 8501:8501 aryanbhatla/league-analysis-image`
+  - `docker run -p 8501:8501 aryanbhatla/league-analysis-image:{tag}`
 
 ### Usage
 Upon running the application, users can navigate through the interface to view and interact with the statistical analyses and comparisons. The tool provides insights into player performances, team strengths, and potential outcomes based on statistical models.
