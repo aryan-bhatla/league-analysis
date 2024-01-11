@@ -111,9 +111,9 @@ def calculate_team_ratings(teams: dict, model_results: pd.DataFrame, final_data:
 
 
 #----------------------------------------------------------------------------------------------------- # 
-# Rating to winrate function 
+# Rating to win one game function 
 #----------------------------------------------------------------------------------------------------- # 
-def rating_to_winrate(team_one: str, team_two: str, league_data_dict: dict) -> list[float]:
+def rating_to_best_of_one(team_one: str, team_two: str, league_data_dict: dict) -> list[float]:
     '''
         
         Parameters: 
@@ -121,11 +121,16 @@ def rating_to_winrate(team_one: str, team_two: str, league_data_dict: dict) -> l
             league_data_dict (dict): One of lck_data_dict, lcs_data_dict, lec_data_dict
 
         Returns: 
-            winrates (list): Predicted winrate for each team, should total 100% = 1
+            best_of_one_winrates (list): Predicted winrate for each team, should total 100% = 1
 
     '''
+    # There is 1C1 = 1 cases in total, with 1 possible scenarios -> 1 game 
+
     # Sensitivity parameter affecting slope of curve
     beta = 0.011
+
+    # Delta parameter affecting importance of ratings
+    delta_coefficient = 1.2 
 
     # Retrieve ratings directly from the dictionary
     rating_one = league_data_dict.get(team_one)
@@ -138,15 +143,92 @@ def rating_to_winrate(team_one: str, team_two: str, league_data_dict: dict) -> l
     # Difference between ratings
     rating_delta = rating_one - rating_two 
 
+    # Scale delta to place emphasize/de-emphasize rating discrepancy 
+    scaled_delta = rating_delta * delta_coefficient
+
     # Denominator for equation 
-    denominator = 1 + math.exp(-beta*rating_delta) 
+    denominator = 1 + math.exp(-beta*scaled_delta) 
 
     # Final winrates 
     winrate_one = 1 / denominator
     winrate_two = 1 - winrate_one
-    winrates = [winrate_one, winrate_two]
+    best_of_one_winrates = [winrate_one, winrate_two]
 
-    return winrates 
+    return best_of_one_winrates 
+
+
+#----------------------------------------------------------------------------------------------------- # 
+# Rating to win two games function 
+#----------------------------------------------------------------------------------------------------- # 
+def rating_to_best_of_three(best_of_one_winrates: list[float]) -> list[float]:
+    '''
+        
+        Parameters: 
+            best_of_one_winrates (list): Predicted best of one game winrates for each team, should total 100% = 1
+
+        Returns: 
+            best_of_three_winrates (list): Predicted best of three game winrates for each team, should total 100% = 1
+
+    '''
+    # There are 3C2 = 3 cases in total, with 2 possible scenarios -> 2 games and 3 games  
+
+    # Case 1: W - W for team one 
+    scenario_one_winrate = best_of_one_winrates[0] * best_of_one_winrates[0]
+    scenario_one_total = 1 * scenario_one_winrate 
+
+    # Case 2: W - L - W for team one
+    # Case 3: L - W - W for team one 
+    scenario_two_winrate = best_of_one_winrates[0] * best_of_one_winrates[1] * best_of_one_winrates[0]
+    scenario_two_total = 2 * scenario_two_winrate
+
+    # Final winrates 
+    winrate_one = scenario_one_total + scenario_two_total
+    winrate_two = 1 - winrate_one
+    best_of_three_winrates = [winrate_one, winrate_two]
+
+    return best_of_three_winrates
+
+
+#----------------------------------------------------------------------------------------------------- # 
+# Rating to win three games function 
+#----------------------------------------------------------------------------------------------------- # 
+def rating_to_best_of_five(best_of_one_winrates: list[float]) -> list[float]:
+    '''
+        
+        Parameters: 
+            best_of_one_winrates (list): Predicted best of one game winrates for each team, should total 100% = 1
+
+        Returns: 
+            best_of_five_winrates (list): Predicted best of five game winrates for each team, should total 100% = 1
+
+    '''
+    # There are 5C3 = 10 cases in total, with 3 possible scenarios -> 3 games, 4 games and 5 games 
+
+    # Case 1: W - W - W for team one 
+    scenario_one_winrate = best_of_one_winrates[0] * best_of_one_winrates[0] * best_of_one_winrates[0]
+    scenario_one_total = 1 * scenario_one_winrate
+
+    # Case 2: W - W - L - W for team one 
+    # Case 3: W - L - W - W for team one
+    # Case 4: L - W - W - W for team one 
+    scenario_two_winrate = best_of_one_winrates[0] * best_of_one_winrates[0] * best_of_one_winrates[1] * best_of_one_winrates[0]
+    scenario_two_total = 3 * scenario_two_winrate
+
+    # Case 5: W - W - L - L - W for team one
+    # Case 6: W - L - L - W - W for team one 
+    # Case 7: L - L - W - W - W for team one
+    # Case 8: L - W - W - L - W for team one 
+    # Case 9: W - L - W - L - W for team one
+    # Case 10: L - W - L - W - W for team one 
+    scenario_three_winrate = best_of_one_winrates[0] * best_of_one_winrates[0] * best_of_one_winrates[0] * best_of_one_winrates[1] * best_of_one_winrates[1] 
+    scenario_three_total = 6 * scenario_three_winrate
+
+    # Final winrates 
+    winrate_one = scenario_one_total + scenario_two_total + scenario_three_total
+    winrate_two = 1 - winrate_one
+    best_of_five_winrates = [winrate_one, winrate_two]
+
+    return best_of_five_winrates
 
 
 #----------------------------------------------------------------------------------------------------- # 
@@ -195,12 +277,13 @@ def ratings_table(league_teams: dict, team_ratings: list) -> pd.DataFrame:
 #----------------------------------------------------------------------------------------------------- # 
 # Winrate tabulation function 
 #----------------------------------------------------------------------------------------------------- # 
-def winrates_table(league_teams: dict, league_data_dict: dict) -> pd.DataFrame: 
+def winrates_table(league_teams: dict, league_data_dict: dict, best_of_size: int) -> pd.DataFrame: 
     '''
 
         Parameters: 
             league_teams (dict): One of LCK_teams, LCS_teams or LEC_teams
             league_data_dict (dict): One of lck_data_dict, lcs_data_dict, lec_data_dict
+            best_of_size (str): One of 1, 3, 5 
             
         Returns: 
             winrates (pd.DataFrame): Table containing pairwise winrates for each team in the league
@@ -213,13 +296,25 @@ def winrates_table(league_teams: dict, league_data_dict: dict) -> pd.DataFrame:
     winrates_df = pd.DataFrame(index=[f"{team} (Winner)" for team in team_names],
                            columns=[f"{team} (Opponent)" for team in team_names])
 
+    # Decide rating function dependent on game size
+    rating_function = None
+    if best_of_size == 1:
+        rating_function = rating_to_best_of_one
+    elif best_of_size == 3:
+        rating_function = rating_to_best_of_three
+    elif best_of_size == 5:
+        rating_function = rating_to_best_of_five
+    else:
+        raise ValueError("Invalid best_of_size. Must be 1, 3, or 5.")
+
     for i in range(len(team_names)):
         for j in range(len(team_names)):
             i_team = team_names[i]
             j_team = team_names[j]
 
             # Calculate team winrates and then odds
-            winrates = rating_to_winrate(i_team, j_team, league_data_dict)
+            
+            winrates = rating_function(i_team, j_team, league_data_dict)
 
             # Assign odds to DataFrame
             row_label = f"{i_team} (Winner)"
@@ -232,12 +327,13 @@ def winrates_table(league_teams: dict, league_data_dict: dict) -> pd.DataFrame:
 #----------------------------------------------------------------------------------------------------- # 
 # Pairwise odds tabulation function 
 #----------------------------------------------------------------------------------------------------- # 
-def odds_table(league_teams: dict, league_data_dict: dict) -> pd.DataFrame: 
+def odds_table(league_teams: dict, league_data_dict: dict, best_of_size: int) -> pd.DataFrame: 
     '''
 
         Parameters: 
             league_teams (dict): One of LCK_teams, LCS_teams or LEC_teams
             league_data_dict (dict): One of lck_data_dict, lcs_data_dict, lec_data_dict
+            best_of_size (str): One of 1, 3, 5
             
         Returns: 
             odds (pd.DataFrame): Table containing pairwise odds for each team in the league
@@ -250,13 +346,24 @@ def odds_table(league_teams: dict, league_data_dict: dict) -> pd.DataFrame:
     odds_df = pd.DataFrame(index=[f"{team} (Winner)" for team in team_names],
                            columns=[f"{team} (Opponent)" for team in team_names])
 
+    # Decide rating function dependent on game size
+    rating_function = None
+    if best_of_size == 1:
+        rating_function = rating_to_best_of_one
+    elif best_of_size == 3:
+        rating_function = rating_to_best_of_three
+    elif best_of_size == 5:
+        rating_function = rating_to_best_of_five
+    else:
+        raise ValueError("Invalid best_of_size. Must be 1, 3, or 5.")
+
     for i in range(len(team_names)):
         for j in range(len(team_names)):
             i_team = team_names[i]
             j_team = team_names[j]
 
             # Calculate team winrates and then odds
-            winrates = rating_to_winrate(i_team, j_team, league_data_dict)
+            winrates = rating_function(i_team, j_team, league_data_dict)
             odds = winrate_to_odds(winrates[0], winrates[1])
 
             # Assign odds to DataFrame

@@ -317,14 +317,29 @@ lec_ratings = logistic.ratings_table(LEC_teams, lec_team_ratings)
 #----------------------------------------------------------------------------------------------------- #
 # LCK, LCS, LEC winrates tables 
 #----------------------------------------------------------------------------------------------------- # 
-lck_winrates = logistic.winrates_table(LCK_teams, lck_data_dict)
-lcs_winrates = logistic.winrates_table(LCS_teams, lcs_data_dict)
-lec_winrates = logistic.winrates_table(LEC_teams, lec_data_dict)
+best_of_one_lck_winrates = logistic.winrates_table(LCK_teams, lck_data_dict, 1)
+best_of_one_lcs_winrates = logistic.winrates_table(LCS_teams, lcs_data_dict, 1)
+best_of_one_lec_winrates = logistic.winrates_table(LEC_teams, lec_data_dict, 1)
 
+best_of_three_lck_winrates = logistic.winrates_table(LCK_teams, lck_data_dict, 3)
+best_of_three_lcs_winrates = logistic.winrates_table(LCS_teams, lcs_data_dict, 3)
+best_of_three_lec_winrates = logistic.winrates_table(LEC_teams, lec_data_dict, 3)
+
+best_of_five_lck_winrates = logistic.winrates_table(LCK_teams, lck_data_dict, 5)
+best_of_five_lcs_winrates = logistic.winrates_table(LCS_teams, lcs_data_dict, 5)
+best_of_five_lec_winrates = logistic.winrates_table(LEC_teams, lec_data_dict, 5)
 
 #----------------------------------------------------------------------------------------------------- #
 # LCK, LCS, LEC odds tables 
 #----------------------------------------------------------------------------------------------------- # 
-lck_odds = logistic.odds_table(LCK_teams, lck_data_dict)
-lcs_odds = logistic.odds_table(LCS_teams, lcs_data_dict)
-lec_odds = logistic.odds_table(LEC_teams, lec_data_dict)
+best_of_one_lck_odds = logistic.odds_table(LCK_teams, lck_data_dict, 1)
+best_of_one_lcs_odds = logistic.odds_table(LCS_teams, lcs_data_dict, 1)
+best_of_one_lec_odds = logistic.odds_table(LEC_teams, lec_data_dict, 1)
+
+best_of_three_lck_odds = logistic.odds_table(LCK_teams, lck_data_dict, 3)
+best_of_three_lcs_odds = logistic.odds_table(LCS_teams, lcs_data_dict, 3)
+best_of_three_lec_odds = logistic.odds_table(LEC_teams, lec_data_dict, 3)
+
+best_of_five_lck_odds = logistic.odds_table(LCK_teams, lck_data_dict, 5)
+best_of_five_lcs_odds = logistic.odds_table(LCS_teams, lcs_data_dict, 5)
+best_of_five_lec_odds = logistic.odds_table(LEC_teams, lec_data_dict, 5)
