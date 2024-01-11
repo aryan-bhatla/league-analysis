@@ -312,9 +312,11 @@ def winrates_table(league_teams: dict, league_data_dict: dict, best_of_size: int
             i_team = team_names[i]
             j_team = team_names[j]
 
-            # Calculate team winrates and then odds
-            
-            winrates = rating_function(i_team, j_team, league_data_dict)
+            # Calculate team winrates
+            if rating_function == rating_to_best_of_one: 
+                winrates = rating_function(i_team, j_team, league_data_dict)
+            else: 
+                winrates = rating_function(rating_to_best_of_one(i_team, j_team, league_data_dict))
 
             # Assign odds to DataFrame
             row_label = f"{i_team} (Winner)"
@@ -362,8 +364,13 @@ def odds_table(league_teams: dict, league_data_dict: dict, best_of_size: int) ->
             i_team = team_names[i]
             j_team = team_names[j]
 
-            # Calculate team winrates and then odds
-            winrates = rating_function(i_team, j_team, league_data_dict)
+            # Calculate team winrates
+            if rating_function == rating_to_best_of_one: 
+                winrates = rating_function(i_team, j_team, league_data_dict)
+            else: 
+                winrates = rating_function(rating_to_best_of_one(i_team, j_team, league_data_dict))
+
+            # Calculate team odds
             odds = winrate_to_odds(winrates[0], winrates[1])
 
             # Assign odds to DataFrame
