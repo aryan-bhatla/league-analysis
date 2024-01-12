@@ -22,8 +22,11 @@ def cleanup_data(joined_data: pd.DataFrame) -> pd.DataFrame:
     # Remove all '%' from columns
     removed_data = joined_data.replace('%', '', regex = True)
     
-    # Convert all numerical strings to floats (4th column onwards)
-    removed_data.iloc[:, 3:] = removed_data.iloc[:, 3:].astype(float)
+    # Convert all numerical strings to floats (4th column onwards, excluding 'Source')
+    numerical_columns = removed_data.columns[3:]
+    numerical_columns = numerical_columns.drop('Source')  # Exclude 'Source' column
+    removed_data[numerical_columns] = removed_data[numerical_columns].astype(float)
+
     replaced_data = removed_data
 
     return replaced_data
@@ -32,11 +35,12 @@ def cleanup_data(joined_data: pd.DataFrame) -> pd.DataFrame:
 #----------------------------------------------------------------------------------------------------- # 
 # Data appending function
 #----------------------------------------------------------------------------------------------------- # 
-def append_data(replaced_data: pd.DataFrame) -> pd.DataFrame:
+def append_data(replaced_data: pd.DataFrame, coefficient: float = 0.80) -> pd.DataFrame:
     '''
         
         Parameters: 
             replaced_data (pd.DataFrame): Cleaned statistics 
+            coefficient (float): Co-efficient to apply to sub-leagues data
         
         Returns: 
             replaced_data (pd.DataFrame): Appended statistics with 'totals'
@@ -70,6 +74,13 @@ def append_data(replaced_data: pd.DataFrame) -> pd.DataFrame:
     replaced_data['Total WPM'] = replaced_data['GP'] * replaced_data['WPM']
     replaced_data['Total CWPM'] = replaced_data['GP'] * replaced_data['CWPM']
     replaced_data['Total WCPM'] = replaced_data['GP'] * replaced_data['WCPM']
+
+    # Account for sub leagues being weaker than main leagues
+    for col in ['Total W%', 'Total CTR%', 'Total KP', 'Total KS%', 'Total DTH%', 'Total FB%', 
+                'Total GD10', 'Total XPD10', 'Total CSD10', 'Total CSPM', 'Total CS%P15', 
+                'Total DPM', 'Total DMG%', 'Total D%P15', 'Total EGPM', 'Total GOLD%', 
+                'Total WPM', 'Total CWPM', 'Total WCPM']:
+        replaced_data.loc[replaced_data['Source'] == 'sub_league', col] *= coefficient
 
     return replaced_data
 
@@ -175,12 +186,19 @@ def prepare_data(pathname: str, *additional_pathname: str) -> pd.DataFrame:
 
     # Iterate over the initial pathname and any additional pathnames
     for directory in [pathname, *additional_pathname]:
-        
+
+        # Divide data into main and sub leagues        
+        if "LCK_Player_Data" in directory or "LCS_Player_Data" in directory or "LEC_Player_Data" in directory or "MSI_Player_Data" in directory or "Worlds_Player_Data" in directory:
+            source = 'main_league'
+        else:
+            source = 'sub_league'
+
         # Construct the full file path for each file in the directory
         for file_path in glob.glob(os.path.join(directory, '*.csv')): 
             
             # Read the file and append to the list of DataFrames
             df = pd.read_csv(file_path)
+            df['Source'] = source
             dataframes.append(df)
 
     # Concatenate all data together
@@ -190,7 +208,7 @@ def prepare_data(pathname: str, *additional_pathname: str) -> pd.DataFrame:
     cleaned_data = cleanup_data(joined_data)
     
     # Collect total stats across each split 
-    appended_data = append_data(cleaned_data)
+    appended_data = append_data(cleaned_data, 0.70)
 
     # Sum player stats across splits
     summed_data = sum_data(appended_data)

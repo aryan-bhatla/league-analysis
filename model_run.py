@@ -13,10 +13,10 @@ from tqdm import tqdm
 #----------------------------------------------------------------------------------------------------- # 
 # Load data 
 final_data = data.prepare_data("data/LCK_Player_Data",
-                                           "data/LCS_Player_Data",
-                                           "data/LEC_Player_Data",
-                                           "data/MSI_Player_Data",
-                                           "data/Worlds_Player_Data")
+                               "data/LCS_Player_Data",
+                               "data/LEC_Player_Data",
+                               "data/MSI_Player_Data",
+                               "data/Worlds_Player_Data")
 
 # Clean up final row containing NaN
 final_data.drop(final_data.tail(1).index, inplace = True)
@@ -35,7 +35,7 @@ Top_data = grouped_data.get_group('Top')
 # Results setup
 #----------------------------------------------------------------------------------------------------- # 
 # Number of iterations
-num_iterations = 10
+num_iterations = 100
 
 # Initialize a dictionary to store results for each iteration
 all_results = {i: pd.DataFrame() for i in range(num_iterations)}

@@ -283,8 +283,8 @@ model_results = pd.read_csv('model_results.csv', index_col = 0)
 #----------------------------------------------------------------------------------------------------- #
 # Elo normalisation factor
 #----------------------------------------------------------------------------------------------------- # 
-LCS_normalisation = 1.20
-LEC_normalisation = 1.125
+LCS_normalisation = 1.0
+LEC_normalisation = 1.0
 LCK_normalisation = 1.0
 
 
@@ -292,6 +292,8 @@ LCK_normalisation = 1.0
 # LCK, LCS, LEC ratings
 #----------------------------------------------------------------------------------------------------- # 
 model_method = "rf_importance"
+# model_method = "coefficient"
+# model_method = "xg_importance"
 
 lck_team_ratings = logistic.calculate_team_ratings(LCK_teams, model_results, player_data, model_method)
 lcs_team_ratings = logistic.calculate_team_ratings(LCS_teams, model_results, player_data, model_method, LCS_normalisation)
@@ -328,6 +330,7 @@ best_of_three_lec_winrates = logistic.winrates_table(LEC_teams, lec_data_dict, 3
 best_of_five_lck_winrates = logistic.winrates_table(LCK_teams, lck_data_dict, 5)
 best_of_five_lcs_winrates = logistic.winrates_table(LCS_teams, lcs_data_dict, 5)
 best_of_five_lec_winrates = logistic.winrates_table(LEC_teams, lec_data_dict, 5)
+
 
 #----------------------------------------------------------------------------------------------------- #
 # LCK, LCS, LEC odds tables 

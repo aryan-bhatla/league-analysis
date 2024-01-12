@@ -130,7 +130,7 @@ def rating_to_best_of_one(team_one: str, team_two: str, league_data_dict: dict) 
     beta = 0.011
 
     # Delta parameter affecting importance of ratings
-    delta_coefficient = 1.2 
+    delta_coefficient = 1.01
 
     # Retrieve ratings directly from the dictionary
     rating_one = league_data_dict.get(team_one)
@@ -143,8 +143,14 @@ def rating_to_best_of_one(team_one: str, team_two: str, league_data_dict: dict) 
     # Difference between ratings
     rating_delta = rating_one - rating_two 
 
-    # Scale delta to place emphasize/de-emphasize rating discrepancy 
-    scaled_delta = rating_delta * delta_coefficient
+    # Determine the sign of rating_delta
+    delta_sign = 1 if rating_delta >= 0 else -1
+
+    # Apply power operation to the absolute value of rating_delta
+    scaled_delta = abs(rating_delta) ** delta_coefficient
+
+    # Reapply the original sign
+    scaled_delta *= delta_sign
 
     # Denominator for equation 
     denominator = 1 + math.exp(-beta*scaled_delta) 

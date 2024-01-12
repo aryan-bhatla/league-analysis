@@ -30,8 +30,8 @@ def perform_random_forest(data: pd.DataFrame, seed: int) -> tuple[float, float, 
     '''
     # Split data into dependent and independent variables
     X = data.drop(['Team', 'Pos', 'GP', 'W%', 'KDA', 'STL'], axis = 1)                   # indepdendent variables = other statistics
-    y = data['W%']                                                                # dependent variable = winrate 
-    weights = data['GP']                                                          # weigh each row depending on number of games played   
+    y = data['W%']                                                                       # dependent variable = winrate 
+    weights = data['GP']                                                                 # weigh each row depending on number of games played   
 
     # K-fold validation setup
     k = 10
@@ -60,7 +60,7 @@ def perform_random_forest(data: pd.DataFrame, seed: int) -> tuple[float, float, 
 
     # Feature importance
     feature_importances = pd.DataFrame(rf_model.feature_importances_, index = X_train.columns, columns = ['rf_Importance']).sort_values('rf_Importance', ascending = False)
-
+    print(np.mean(r2_scores))
     return np.mean(r2_scores), np.mean(mse_scores), feature_importances
 
 
@@ -82,8 +82,8 @@ def perform_linear_regression(data: pd.DataFrame, seed: int) -> tuple[float, flo
     '''
     # Split data into dependent and independent variables
     X = data.drop(['Team', 'Pos', 'GP', 'W%', 'KDA', 'STL'], axis = 1)                   # indepdendent variables = other statistics
-    y = data['W%']                                                                # dependent variable = winrate 
-    weights = data['GP']                                                          # weigh each row depending on number of games played
+    y = data['W%']                                                                       # dependent variable = winrate 
+    weights = data['GP']                                                                 # weigh each row depending on number of games played
 
     # K-fold validation setup
     k = 10
@@ -117,7 +117,6 @@ def perform_linear_regression(data: pd.DataFrame, seed: int) -> tuple[float, flo
 
     # Coefficients
     coefficients = pd.DataFrame(lr_model.coef_, X_train.columns, columns = ['Coefficient'])
-
     return np.mean(r2_scores), np.mean(mse_scores), coefficients
 
 
@@ -168,5 +167,4 @@ def perform_xgboost(data: pd.DataFrame, seed: int) -> tuple[float, float, float]
 
     # Feature importance
     xg_feature_importances = pd.DataFrame(xg_model.feature_importances_, index = X_train.columns, columns = ['xg_Importance']).sort_values('xg_Importance', ascending = False)
-
     return np.mean(r2_scores), np.mean(mse_scores), xg_feature_importances
